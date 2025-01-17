@@ -1,16 +1,21 @@
 import { useState } from "react";
 import { Container, createTheme } from "@mui/material";
 import { ThemeProvider } from "@emotion/react";
-import NavBar from "./Component/NavBar";
 import FileContainer from "./Pages/FileContainer";
+import { Route, Routes } from "react-router-dom";
+import Header from "./Component/Header";
+import FileUploadContainer from "./Pages/FileUploadContainer";
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#00e676",
+      main: "#13203b",
     },
     secondary: {
-      main: "#607d8b",
+      main: "#fca311",
+    },
+    info: {
+      main: "#e5e5e5",
     },
   },
 });
@@ -20,7 +25,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <NavBar />
+      <Header />
       <Container
         sx={(theme) => ({
           p: 0,
@@ -28,7 +33,12 @@ function App() {
         })}
         color="success"
       >
-        <FileContainer setAllowDownload={setAllowDownload} />
+        <Routes>
+          <Route
+            element={<FileContainer setAllowDownload={setAllowDownload} />}
+          />
+          <Route path="/" element={<FileUploadContainer />} />
+        </Routes>
       </Container>
     </ThemeProvider>
   );

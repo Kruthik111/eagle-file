@@ -243,4 +243,6 @@ const rows = [
   },
 ];
 
-module.exports = rows;
+// module.exports = rows;
+
+export default rows;

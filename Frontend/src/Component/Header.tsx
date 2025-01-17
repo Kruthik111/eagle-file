@@ -11,11 +11,12 @@ import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import MailIcon from "@mui/icons-material/Mail";
+import PortraitIcon from "@mui/icons-material/Portrait";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { Logout } from "@mui/icons-material";
+import logo from "../assets/eagle-file-logo.png";
+import { Button } from "@mui/material";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -57,7 +58,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function NavBar() {
+export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -143,7 +144,7 @@ export default function NavBar() {
           aria-haspopup="true"
           color="inherit"
         >
-          <AccountCircle />
+          <PortraitIcon />
         </IconButton>
         <p>Profile</p>
       </MenuItem>
@@ -152,7 +153,7 @@ export default function NavBar() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="static" sx={{ bgcolor: "transparent" }} elevation={0}>
         <Toolbar>
           <IconButton
             size="large"
@@ -163,32 +164,36 @@ export default function NavBar() {
           >
             <MenuIcon />
           </IconButton>
+          <Box
+            component="img"
+            sx={{
+              height: 40,
+              width: 40,
+              mr: 2,
+            }}
+            src={logo}
+            alt="logo"
+            loading="loading"
+          />
+
           <Typography
             variant="h4"
+            color="primary"
             noWrap
-            component="div"
-            sx={{ display: { xs: "none", sm: "block" } }}
+            sx={{ display: { xs: "none", sm: "block" }, fontWeight: 800 }}
           >
-            MUI
+            Eagle-Files
           </Typography>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Search>
+
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+          {/* <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <IconButton
               size="large"
               aria-label="show 17 new notifications"
               color="inherit"
             >
               <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
+                <NotificationsIcon color="secondary" />
               </Badge>
             </IconButton>
             <IconButton
@@ -200,9 +205,24 @@ export default function NavBar() {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <AccountCircle />
+              <PortraitIcon color="secondary" />
             </IconButton>
-          </Box>
+          </Box> */}
+          <Button
+            variant="contained"
+            endIcon={
+              <Typography
+                sx={{
+                  display: "none",
+                }}
+                letterSpacing={0}
+              >
+                &gt; &gt;
+              </Typography>
+            }
+          >
+            About US
+          </Button>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -210,7 +230,7 @@ export default function NavBar() {
               aria-controls={mobileMenuId}
               aria-haspopup="true"
               onClick={handleMobileMenuOpen}
-              color="inherit"
+              color="primary"
             >
               <MoreIcon />
             </IconButton>

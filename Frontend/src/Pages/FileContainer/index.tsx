@@ -14,24 +14,23 @@ import {
 import FileDialog from "../../Component/FileDialog";
 
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
-import { FcFolder } from "react-icons/fc";
+import { FcEmptyTrash, FcFolder } from "react-icons/fc";
 import LoadingFiles from "../../Component/LoadingFiles";
 import TableHeader from "./TableHeader";
-import emptyIcon from "../../assets/empty-box.png";
 
 interface FileContainerProps {
   setAllowDownload: Dispatch<SetStateAction<boolean>>;
 }
 
-const FileContainer: React.FC<FileContainerProps> = ({ setAllowDownload }) => {
-  const securedFileIds = [5, 6];
+const FileContainer: React.FC<FileContainerProps> = () => {
+  // const securedFileIds = [5, 6];
   const [loading, setLoading] = useState(false);
-  const [rows, setRows] = useState([]);
+  const [rows, setRows] = useState();
   const [error, setError] = useState(null);
   const [open, setOpen] = useState(false);
   async function fetchData(): Promise<void> {
     setLoading(true);
-    fetch("http://localhost:3000/data")
+    fetch("http://localhost:8000/data")
       .then((response) => response.json())
       .then((data) => setRows(data[0].contents))
       .catch((error) => {
@@ -51,15 +50,15 @@ const FileContainer: React.FC<FileContainerProps> = ({ setAllowDownload }) => {
     return <h1>Unable to Fetch</h1>;
   }
 
-  function containsAny(arr1: number[], arr2: number[]): boolean {
-    return arr1.some((item) => arr2.includes(item));
-  }
+  // function containsAny(arr1: number[], arr2: number[]): boolean {
+  //   return arr1.some((item) => arr2.includes(item));
+  // }
 
-  function handleSelected(event: number[]): any {
-    setAllowDownload(containsAny(event, securedFileIds));
-  }
+  // function handleSelected(event: number[]): any {
+  //   setAllowDownload(containsAny(event, securedFileIds));
+  // }
 
-  function handleCellClick(row: {}) {
+  function handleCellClick(row: { type: String; contents: [] }) {
     if (row.type === "folder") {
       row.contents ? setRows(row.contents) : setRows([]);
       return;
@@ -68,9 +67,7 @@ const FileContainer: React.FC<FileContainerProps> = ({ setAllowDownload }) => {
   }
 
   return (
-    <Paper
-      sx={{ height: 400, width: "100%", backgroundColor: "secondary", m: 2 }}
-    >
+    <Paper sx={{ height: 400, width: "100%", m: 2 }}>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
           {/* Table header */}
@@ -82,13 +79,17 @@ const FileContainer: React.FC<FileContainerProps> = ({ setAllowDownload }) => {
                   key={index}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell align="center" sx={{ maxWidth: "10px" }}>
+                  <TableCell
+                    align="center"
+                    sx={{ maxWidth: "10px" }}
+                    color="secondary"
+                  >
                     <Checkbox
                       icon={<RadioButtonUncheckedTwoToneIcon />}
                       checkedIcon={<CheckCircleTwoToneIcon />}
                     />
                   </TableCell>
-                  <TableCell align="left">
+                  <TableCell align="left" color="#e5e5e5">
                     {row.type === "file" ? (
                       <InsertDriveFileIcon
                         sx={{
@@ -125,8 +126,8 @@ const FileContainer: React.FC<FileContainerProps> = ({ setAllowDownload }) => {
               // If there is nothing inside the folder
               <TableRow>
                 <TableCell colSpan={6} align="left">
-                  {/* <FcEmptyTrash size={400} width={"100%"} /> */}
-                  <img src={emptyIcon} alt="" style={{ height: "300px" }} />
+                  <FcEmptyTrash size={400} width={"100%"} />
+                  {/* <img src={emptyIcon} alt="" style={{ height: "300px" }} /> */}
                 </TableCell>
               </TableRow>
             )}
