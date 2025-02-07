@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Container, createTheme } from "@mui/material";
 import { ThemeProvider } from "@emotion/react";
-import FileContainer from "./Pages/FileContainer";
+import FileContainer from "./Pages/NodeViewPage";
 import { Route, Routes } from "react-router-dom";
 import Header from "./Component/Header";
-import FileUploadContainer from "./Pages/FileUploadContainer";
+import GetStarted from "./Pages/GetStarted";
 
 const theme = createTheme({
   palette: {
@@ -18,6 +18,9 @@ const theme = createTheme({
       main: "#e5e5e5",
     },
   },
+  typography: {
+    fontFamily: ["raleway", "kavoon", "sans-serif"].join(","),
+  },
 });
 
 function App() {
@@ -28,16 +31,23 @@ function App() {
       <Header />
       <Container
         sx={(theme) => ({
-          p: 0,
-          [theme.breakpoints.up("md")]: { px: 10 },
+          pt: {
+            md: 15,
+            xs: 10,
+          },
+          [theme.breakpoints.up("md")]: { px: 0 },
+          overflow: "hidden",
+          maxWidth: "100dvw",
+          minHeight: "100dvh",
+          scrollBehavior: "smooth",
         })}
-        color="success"
       >
         <Routes>
           <Route
+            path="/node"
             element={<FileContainer setAllowDownload={setAllowDownload} />}
           />
-          <Route path="/" element={<FileUploadContainer />} />
+          <Route path="/" element={<GetStarted />} />
         </Routes>
       </Container>
     </ThemeProvider>

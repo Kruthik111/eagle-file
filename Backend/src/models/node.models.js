@@ -1,18 +1,18 @@
-import { request } from "express";
 import mongoose from "mongoose";
 
 const nodeSchema = new mongoose.Schema(
   {
     nodeid: {
       type: String,
-      required: [true, "nodeid is required"],
+      required: [true, "nodeid required"],
       unique: [true, "nodeid should be unique"],
-      min: [5, "nodeid should be of atleast length 5"],
+      minlength: [5, "nodeid should be of atleast length 5"],
     },
     name: {
       type: String,
-      required: true,
-      min: [1, "node name cannot contain empty string "],
+      required: [true, "nodename required"],
+      minlength: [1, "node name cannot contain empty string "],
+      default: "node",
     },
     iconcolor: { type: String, required: true, default: "#fca311" },
     size: {
@@ -25,23 +25,24 @@ const nodeSchema = new mongoose.Schema(
       select: false,
     },
     items: {
-      folders: [
-        {
-          type: mongoose.Types.ObjectId,
-          ref: "Folder",
-          required: true,
-          default: [],
-        },
-      ],
-      files: [
-        {
-          type: mongoose.Types.ObjectId,
-          ref: "File",
-          required: true,
-          default: [],
-        },
-      ],
-      required: true,
+      folders: {
+        type: [
+          {
+            type: mongoose.Types.ObjectId,
+            ref: "Folder",
+          },
+        ],
+        default: [],
+      },
+      files: {
+        type: [
+          {
+            type: mongoose.Types.ObjectId,
+            ref: "File",
+          },
+        ],
+        default: [],
+      },
     },
     owner: {
       type: mongoose.Types.ObjectId,

@@ -19,25 +19,22 @@ import LoadingFiles from "../../Component/LoadingFiles";
 import TableHeader from "./TableHeader";
 
 interface FileContainerProps {
-  setAllowDownload: Dispatch<SetStateAction<boolean>>;
+  files: [];
 }
 
-const FileContainer: React.FC<FileContainerProps> = () => {
+// const FileContainer: React.FC<FileContainerProps> = () => {
+const FileContainer: React.FC<FileContainerProps> = ({ files }) => {
   // const securedFileIds = [5, 6];
   const [loading, setLoading] = useState(false);
-  const [rows, setRows] = useState();
+  const [rows, setRows] = useState(files);
   const [error, setError] = useState(null);
   const [open, setOpen] = useState(false);
   async function fetchData(): Promise<void> {
     setLoading(true);
-    fetch("http://localhost:8000/data")
-      .then((response) => response.json())
-      .then((data) => setRows(data[0].contents))
-      .catch((error) => {
-        console.error("Error:", error);
-        setError(error);
-      })
-      .finally(() => setLoading(false));
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
   }
   useEffect(() => {
     fetchData();

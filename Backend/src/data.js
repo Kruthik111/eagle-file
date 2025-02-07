@@ -1,15 +1,3 @@
-// const rows = [
-//   { id: 1, author: "Mannu", fileName: "index.html", size: "30mb" },
-//   { id: 2, author: "Ram", fileName: "File.pdf", size: "12kb" },
-//   { id: 3, author: "John", fileName: "data.xml", size: "45mb" },
-//   { id: 4, author: "Stark", fileName: "ch1.pptx", size: "16mb" },
-//   { id: 5, author: "Targaryen", fileName: "ref.pdf", size: "50mb" },
-//   { id: 6, author: "John", fileName: "index.html", size: "30mb" },
-//   { id: 7, author: "Arthur", fileName: "File.pdf", size: "12kb" },
-//   { id: 8, author: "John", fileName: "data.xml", size: "45mb" },
-//   { id: 9, author: "Stark", fileName: "ch1.pptx", size: "16mb" },
-//   { id: 10, author: "Targaryen", fileName: "ref.pdf", size: "50mb" },
-// ];
 const rows = [
   {
     id: 1,
