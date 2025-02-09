@@ -1,5 +1,6 @@
 import Paper from "@mui/material/Paper";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { getReadableFileSizeString } from "../../utils/getReadableFileSizeFormat.ts";
 import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
 import RadioButtonUncheckedTwoToneIcon from "@mui/icons-material/RadioButtonUncheckedTwoTone";
 import {
@@ -17,25 +18,36 @@ import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import { FcEmptyTrash, FcFolder } from "react-icons/fc";
 import LoadingFiles from "../../Component/LoadingFiles";
 import TableHeader from "./TableHeader";
+import { useParams } from "react-router-dom";
 
-interface FileContainerProps {
-  files: [];
-}
-
-// const FileContainer: React.FC<FileContainerProps> = () => {
-const FileContainer: React.FC<FileContainerProps> = ({ files }) => {
-  // const securedFileIds = [5, 6];
+const NodeViewPage = () => {
+  let { nodeid } = useParams();
   const [loading, setLoading] = useState(false);
-  const [rows, setRows] = useState(files);
   const [error, setError] = useState(null);
-  const [open, setOpen] = useState(false);
+  const [rows, setRows] = useState([]);
+
   async function fetchData(): Promise<void> {
     setLoading(true);
-
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+    await fetch(`http://localhost:8000/node/${nodeid}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setRows(data);
+      })
+      .catch((err) => {
+        console.log("error occured while fetching node data ", err);
+        setError(err.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }
+  // const FileContainer: React.FC<FileContainerProps> = ({ files }) => {
+  // const securedFileIds = [5, 6];
+  const [open, setOpen] = useState(false);
+
+  // const files = [];
+
   useEffect(() => {
     fetchData();
     console.log(rows);
@@ -58,6 +70,7 @@ const FileContainer: React.FC<FileContainerProps> = ({ files }) => {
   function handleCellClick(row: { type: String; contents: [] }) {
     if (row.type === "folder") {
       row.contents ? setRows(row.contents) : setRows([]);
+      console.log(row.contents);
       return;
     }
     setOpen(true);
@@ -87,7 +100,7 @@ const FileContainer: React.FC<FileContainerProps> = ({ files }) => {
                     />
                   </TableCell>
                   <TableCell align="left" color="#e5e5e5">
-                    {row.type === "file" ? (
+                    {row.type !== "file" ? (
                       <InsertDriveFileIcon
                         sx={{
                           color: "#2196F3",
@@ -109,14 +122,14 @@ const FileContainer: React.FC<FileContainerProps> = ({ files }) => {
                     }}
                     onClick={() => handleCellClick(row)}
                   >
-                    {row.name}
+                    {row.originalname}
                   </TableCell>
                   <TableCell align="left">
-                    {row.size}
-                    {row.type === "folder" && " items"}
+                    {getReadableFileSizeString(row.size)}
+                    {row.type === "folder" && "items"}
                   </TableCell>
-                  <TableCell align="left">{row.created}</TableCell>
-                  <TableCell align="left">{row.lastModified}</TableCell>
+                  <TableCell align="left">{row.createdAt}</TableCell>
+                  <TableCell align="left">{row.updatedAt}</TableCell>
                 </TableRow>
               ))
             ) : (
@@ -136,4 +149,4 @@ const FileContainer: React.FC<FileContainerProps> = ({ files }) => {
   );
 };
 
-export default FileContainer;
+export default NodeViewPage;

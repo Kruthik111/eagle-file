@@ -6,7 +6,7 @@ const nodeSchema = new mongoose.Schema(
       type: String,
       required: [true, "nodeid required"],
       unique: [true, "nodeid should be unique"],
-      minlength: [5, "nodeid should be of atleast length 5"],
+      minlength: [4, "nodeid should be of atleast length 5"],
     },
     name: {
       type: String,

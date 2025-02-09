@@ -18,7 +18,7 @@ import NoteAddOutlinedIcon from "@mui/icons-material/NoteAddOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useState } from "react";
 import AddPassword from "./AddPassword";
-import { Password } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -48,9 +48,8 @@ const CreateNodeModal = ({ files, deleteFile, setFiles, handleFileUpload }) => {
   const [addPassword, setAddPassword] = useState(false);
   const [passwordText, setPasswordText] = useState("");
 
-  console.log(files);
-
-  async function createNode(event) {
+  const navigate = useNavigate();
+  async function createNode(event: any) {
     event.preventDefault();
     const formData = new FormData();
     for (let i = 0; i < files.length; i++) {
@@ -58,20 +57,26 @@ const CreateNodeModal = ({ files, deleteFile, setFiles, handleFileUpload }) => {
     }
     formData.append("password", passwordText);
     setLoading(true);
-    try {
-      const response = await fetch("api/node/new", {
-        method: "POST",
-        body: formData,
+    // try {
+    //   const response =
+    await fetch("http://localhost:8000/node/new", {
+      method: "POST",
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((data) => navigate(`/share/${data.nodelink}`))
+      .catch((err) => console.error("Upload Error:", err))
+      .finally(() => {
+        setLoading(false);
       });
 
-      const result = await response.json();
-      // console.log("Upload Success:", result);
-      console.log(result.nodelink);
-    } catch (error) {
-      console.error("Upload Error:", error);
-    } finally {
-      setLoading(false);
-    }
+    // const result = await response.json();
+    // console.log(result.nodelink);
+    // } catch (error) {
+    //   console.error("Upload Error:", error);
+    // } finally {
+    //   setLoading(false);
+    // }
   }
   return (
     <Modal
@@ -130,7 +135,7 @@ const CreateNodeModal = ({ files, deleteFile, setFiles, handleFileUpload }) => {
             overflow: "auto",
           }}
         >
-          {Object.values(files).map((file, index) => (
+          {Object.values(files).map((file: any, index) => (
             <FileRow
               index={index}
               filename={file.name}

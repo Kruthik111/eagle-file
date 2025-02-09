@@ -11,11 +11,11 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 var corsOptions = {
-  origin: "http://localhost:5173/",
+  origin: "http://localhost:5173",
   optionsSuccessStatus: 200,
 };
 
-app.use(express.json({ limit: "16kb" }));
+app.use(express.json({ limit: "30kb" }));
 
 app.use("/share", noderouter);
 app.use("/node", cors(corsOptions), noderouter);

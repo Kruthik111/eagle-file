@@ -5,6 +5,7 @@ import FileContainer from "./Pages/NodeViewPage";
 import { Route, Routes } from "react-router-dom";
 import Header from "./Component/Header";
 import GetStarted from "./Pages/GetStarted";
+import NodeViewPage from "./Pages/NodeViewPage";
 
 const theme = createTheme({
   palette: {
@@ -47,6 +48,7 @@ function App() {
             path="/node"
             element={<FileContainer setAllowDownload={setAllowDownload} />}
           />
+          <Route path="/share/:nodeid" element={<NodeViewPage />} />
           <Route path="/" element={<GetStarted />} />
         </Routes>
       </Container>
