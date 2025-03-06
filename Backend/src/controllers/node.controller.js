@@ -6,8 +6,6 @@ import bcrypt from "bcrypt";
 import path from "node:path";
 import { dirname } from "path";
 
-// import data from "../data";
-
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -132,17 +130,3 @@ const downloadFiles = async (req, res) => {
   }
 };
 export { downloadFiles };
-
-const singleDownload = async (req, res) => {
-  // const fileName = req.file;
-  // const fileName = "../../uploads/-1739466696158-tempicon.png";
-  const fileobj = await File.findOne({ _id: req.params.fid });
-
-  const fileName = `../../${fileobj.storageId}`;
-
-  res.download(path.join(__dirname, fileName), fileobj.originalname, (err) => {
-    console.log(err);
-  });
-};
-
-export { singleDownload };

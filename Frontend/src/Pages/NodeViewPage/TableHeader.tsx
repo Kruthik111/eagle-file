@@ -13,9 +13,9 @@ const TableHeader = () => {
             checkedIcon={<CheckCircleTwoToneIcon />}
           />
         </TableCell>
-        <TableCell align="left">
+        {/* <TableCell align="left">
           <InsertDriveFileOutlinedIcon />
-        </TableCell>
+        </TableCell> */}
         <TableCell sx={{ fontWeight: "600" }} align="left">
           Name
         </TableCell>

@@ -11,7 +11,7 @@ const FileRow = ({
   file,
   toggleFileSelection,
   selectedFiles,
-  singleDownload,
+  singleFileDownload,
 }) => {
   const fileIcons = {
     pdf: <BiSolidFilePdf size={20} color="red" />,
@@ -42,7 +42,7 @@ const FileRow = ({
       <TableCell>{getReadableFileSizeString(file.size)}</TableCell>
       <TableCell>{file.createdAt}</TableCell>
       <TableCell>{file.updatedAt}</TableCell>
-      <TableCell onClick={() => singleDownload(file._id)}>
+      <TableCell onClick={() => singleFileDownload(file._id)}>
         <DownloadButton />
       </TableCell>
     </TableRow>

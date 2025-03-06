@@ -3,7 +3,6 @@ import {
   createNode,
   downloadFiles,
   getNodeData,
-  singleDownload,
   validateNodePassword,
 } from "../controllers/node.controller.js";
 import multer from "multer";
@@ -24,7 +23,6 @@ const upload = multer({ storage });
 
 noderouter.post("/new", upload.array("files"), createNode);
 noderouter.post("/download", downloadFiles);
-noderouter.get("/single/:fid", singleDownload);
 noderouter.get("/:nodeid", getNodeData);
 noderouter.post("/:nodeid/validate", validateNodePassword);
 

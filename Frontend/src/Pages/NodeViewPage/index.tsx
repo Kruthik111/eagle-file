@@ -52,14 +52,8 @@ const NodeViewPage = () => {
       });
   }
 
-  async function singleDownload(fid: Number) {
-    // await fetch(`${BASE_URL}/node/single`, {
-    //   method: "POST",
-    //   body: JSON.stringify({
-    //     fidArr: [...selectedFiles],
-    //   }),
-    // });
-    window.location.href = `http://localhost:8000/node/single/${fid}`;
+  async function singleFileDownload(fid: Number) {
+    window.location.href = `http://localhost:8000/file/download/${fid}`;
   }
 
   async function downloadFiles() {
@@ -117,7 +111,7 @@ const NodeViewPage = () => {
   }
 
   return (
-    <Paper sx={{ height: 400, width: "100%", m: 2 }}>
+    <Box sx={{ height: 400, width: "100%", m: 2 }}>
       <Button onClick={downloadFiles}>
         <DownloadIcon />
       </Button>
@@ -134,7 +128,7 @@ const NodeViewPage = () => {
                   toggleFileSelection={toggleFileSelection}
                   file={file}
                   selectedFiles={selectedFiles}
-                  singleDownload={singleDownload}
+                  singleFileDownload={singleFileDownload}
                 />
               ))
             ) : (
@@ -149,7 +143,7 @@ const NodeViewPage = () => {
         </Table>
       </TableContainer>
       <FileDialog open={open} setOpen={setOpen} />
-    </Paper>
+    </Box>
   );
 };
 
