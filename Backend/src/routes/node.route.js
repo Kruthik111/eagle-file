@@ -1,12 +1,12 @@
 import { Router } from "express";
 import {
   createNode,
+  downloadFiles,
   getNodeData,
+  singleDownload,
   validateNodePassword,
 } from "../controllers/node.controller.js";
 import multer from "multer";
-import path from "path";
-import fs from "node:fs";
 
 const noderouter = Router();
 
@@ -22,17 +22,10 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-async function isSecuredNode(req, res, next) {
-  var nid = req.params.nodeid;
-  const nodeData = await Node.findOne({ nodeid: nid });
-  if (nodeData.password.length > 0) {
-  }
-  console.log(nodeData);
-  next();
-}
-
+noderouter.post("/new", upload.array("files"), createNode);
+noderouter.post("/download", downloadFiles);
+noderouter.get("/single/:fid", singleDownload);
 noderouter.get("/:nodeid", getNodeData);
-noderouter.get("/:nodeid/validate", validateNodePassword);
-noderouter.post("/new", upload.array("files", 5), createNode);
+noderouter.post("/:nodeid/validate", validateNodePassword);
 
 export default noderouter;

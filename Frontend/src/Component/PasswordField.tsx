@@ -1,7 +1,7 @@
-import { useState } from "react";
 import { Stack, TextField } from "@mui/material";
 
-const AddPassword = ({ passwordText, setPasswordText }) => {
+const PasswordField = ({ passwordText, setPasswordText }) => {
+  // console.log(passwordText);
   return (
     <Stack>
       <TextField
@@ -18,4 +18,4 @@ const AddPassword = ({ passwordText, setPasswordText }) => {
   );
 };
 
-export default AddPassword;
+export default PasswordField;

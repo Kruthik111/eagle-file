@@ -1,12 +1,7 @@
 import { Box, Button, Paper, styled, Typography } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
-const FileInput = ({
-  inputText = "Add Files",
-  setFiles,
-  files,
-  handleFileUpload,
-}) => {
+const FileInput = ({ files, inputText = "Add Files", handleFileUpload }) => {
   return (
     <Paper
       elevation={4}

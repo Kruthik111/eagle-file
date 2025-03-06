@@ -19,6 +19,7 @@ const nodeSchema = new mongoose.Schema(
       type: Number,
       required: [true, "size is required"],
     },
+    requiresPassword: { type: Boolean, requires: true },
     password: {
       type: String,
       required: false,
@@ -58,6 +59,7 @@ const nodeSchema = new mongoose.Schema(
       ],
       required: false,
     },
+    createdAt: { type: Date, expires: "10m", default: Date.now },
   },
   {
     timestamps: true,

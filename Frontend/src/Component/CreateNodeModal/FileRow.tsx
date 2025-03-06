@@ -1,5 +1,4 @@
-import { Delete } from "@mui/icons-material";
-import { Button, IconButton, Stack, Typography } from "@mui/material";
+import { IconButton, Stack, Typography } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 
 const FileRow = ({ filename, index, deleteFile }) => {

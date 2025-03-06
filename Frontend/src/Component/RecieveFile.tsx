@@ -12,6 +12,8 @@ import {
   Button,
   Stack,
 } from "@mui/material";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -25,6 +27,21 @@ const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
 }));
 
 const RecieveFile = () => {
+  const [nodeLink, setNodeLink] = useState("");
+  const navigate = useNavigate();
+
+  function viewNode() {
+    const nodeid = nodeLink.slice(-5);
+    if (nodeLink) {
+      navigate(`/share/${nodeid}`);
+    }
+  }
+
+  async function pasteLink() {
+    const text = await navigator.clipboard.readText();
+    setNodeLink(text);
+  }
+
   return (
     <Paper
       elevation={4}
@@ -44,6 +61,8 @@ const RecieveFile = () => {
             id="input-with-icon-textfield"
             variant="outlined"
             size="small"
+            value={nodeLink}
+            onChange={(event) => setNodeLink(event.target.value)}
             sx={{
               borderRadius: "80px",
             }}
@@ -64,6 +83,7 @@ const RecieveFile = () => {
                           cursor: "pointer",
                         }}
                         color="primary"
+                        onClick={pasteLink}
                       />
                     </BootstrapTooltip>
                   </InputAdornment>
@@ -78,6 +98,7 @@ const RecieveFile = () => {
                 flex: 1,
               }}
               color="secondary"
+              onClick={() => setNodeLink("")}
             >
               Clear Text
             </Button>
@@ -87,6 +108,7 @@ const RecieveFile = () => {
                 color: "white",
                 flex: 1,
               }}
+              onClick={viewNode}
             >
               Recieve Files
             </Button>

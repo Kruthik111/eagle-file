@@ -1,6 +1,5 @@
 import {
   Avatar,
-  Box,
   Button,
   IconButton,
   Modal,
@@ -17,8 +16,9 @@ import FileRow from "./FileRow";
 import NoteAddOutlinedIcon from "@mui/icons-material/NoteAddOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useState } from "react";
-import AddPassword from "./AddPassword";
 import { useNavigate } from "react-router-dom";
+import PasswordField from "../PasswordField";
+import { BASE_URL } from "../../constants";
 
 const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -51,37 +51,43 @@ const CreateNodeModal = ({ files, deleteFile, setFiles, handleFileUpload }) => {
   const navigate = useNavigate();
   async function createNode(event: any) {
     event.preventDefault();
-    const formData = new FormData();
-    for (let i = 0; i < files.length; i++) {
-      formData.append("files", files[i]);
+    if (files.length === 0) {
+      alert("Please select files to upload.");
+      return;
     }
+
+    const formData = new FormData();
+    files.forEach((file) => {
+      formData.append("files", file);
+    });
+
     formData.append("password", passwordText);
+
     setLoading(true);
-    // try {
-    //   const response =
-    await fetch("http://localhost:8000/node/new", {
+
+    await fetch(`${BASE_URL}/node/new`, {
       method: "POST",
+      // headers: {
+      //   "Content-Type": "application/json",
+      // },
       body: formData,
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          new Error("sorry");
+          return;
+        }
+        return res.json();
+      })
       .then((data) => navigate(`/share/${data.nodelink}`))
       .catch((err) => console.error("Upload Error:", err))
       .finally(() => {
         setLoading(false);
       });
-
-    // const result = await response.json();
-    // console.log(result.nodelink);
-    // } catch (error) {
-    //   console.error("Upload Error:", error);
-    // } finally {
-    //   setLoading(false);
-    // }
   }
   return (
     <Modal
       open={true}
-      onClose={() => {}}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
@@ -144,7 +150,7 @@ const CreateNodeModal = ({ files, deleteFile, setFiles, handleFileUpload }) => {
           ))}
         </Stack>
         {addPassword && (
-          <AddPassword
+          <PasswordField
             passwordText={passwordText}
             setPasswordText={setPasswordText}
           />

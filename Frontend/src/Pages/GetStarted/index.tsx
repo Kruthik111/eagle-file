@@ -18,13 +18,10 @@ const GetStarted = () => {
 
   const handleFileUpload = (event) => {
     if (!event.target.files) return;
+
     const selectedFiles = event.target.files;
-    // const selectedFiles = Array.from(event.target.files);
-    // const newFiles = selectedFiles.filter((file) => !files.includes(file.name));
     setFiles([...files, ...selectedFiles]);
   };
-
-  // function createNode() {}
 
   return (
     <Box>
@@ -70,7 +67,6 @@ const GetStarted = () => {
           deleteFile={deleteFile}
           setFiles={setFiles}
           handleFileUpload={handleFileUpload}
-          // createNode={createNode}
         />
       )}
     </Box>

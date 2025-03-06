@@ -20,6 +20,7 @@ const fileSchema = new mongoose.Schema(
       required: false,
       select: false,
     },
+    createdAt: { type: Date, expires: "10m", default: Date.now },
   },
   {
     timestamps: true,
