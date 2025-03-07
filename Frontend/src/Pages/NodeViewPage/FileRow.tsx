@@ -9,9 +9,10 @@ import DownloadButton from "../../Component/DownloadButton";
 
 const FileRow = ({
   file,
-  toggleFileSelection,
-  selectedFiles,
+  // toggleFileSelection,
+  // selectedFiles,
   singleFileDownload,
+  id,
 }) => {
   const fileIcons = {
     pdf: <BiSolidFilePdf size={20} color="red" />,
@@ -22,13 +23,13 @@ const FileRow = ({
   };
 
   return (
-    <TableRow>
+    <TableRow key={id}>
       <TableCell align="center" sx={{ maxWidth: "10px" }} color="secondary">
         <Checkbox
           icon={<RadioButtonUncheckedTwoToneIcon />}
           checkedIcon={<CheckCircleTwoToneIcon />}
-          onClick={() => toggleFileSelection(file._id)}
-          checked={selectedFiles.includes(file._id)}
+          // onClick={() => toggleFileSelection(file._id)}
+          // checked={selectedFiles.includes(file._id)}
         />
       </TableCell>
       <TableCell

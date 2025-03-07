@@ -31,6 +31,15 @@ const RecieveFile = () => {
   const navigate = useNavigate();
 
   function viewNode() {
+    // if (nodeLink.length !== 5) {
+    //   if (
+    //     nodeLink.length !== 33 &&
+    //     !nodeLink.startsWith("http://localhost:5173/share/")
+    //   ) {
+    //     alert("invalid link provide the valid link or nodeid");
+    //     return;
+    //   }
+    // }
     const nodeid = nodeLink.slice(-5);
     if (nodeLink) {
       navigate(`/share/${nodeid}`);

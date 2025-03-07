@@ -2,8 +2,7 @@ import Paper from "@mui/material/Paper";
 import { useEffect, useState } from "react";
 import {
   Box,
-  Button,
-  Container,
+  // Button,
   Table,
   TableBody,
   TableCell,
@@ -11,14 +10,13 @@ import {
   TableRow,
 } from "@mui/material";
 
-import FileDialog from "../../Component/FileDialog";
 import { FcEmptyTrash } from "react-icons/fc";
 import LoadingFiles from "../../Component/LoadingFiles";
 import TableHeader from "./TableHeader";
 import { useParams } from "react-router-dom";
 import FileRow from "./FileRow.tsx";
 import ValidatePasswordModal from "./ValidatePasswordModal.tsx";
-import DownloadIcon from "@mui/icons-material/Download";
+// import DownloadIcon from "@mui/icons-material/Download";
 import { BASE_URL } from "../../constants.ts";
 
 const NodeViewPage = () => {
@@ -27,20 +25,17 @@ const NodeViewPage = () => {
   const [error, setError] = useState(null);
   const [files, setFiles] = useState([]);
   const [passwordRequired, setPasswordRequired] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [selectedFiles, setselectedFiles] = useState([]);
+  // const [selectedFiles, setselectedFiles] = useState([]);
 
   async function fetchData(): Promise<void> {
     setLoading(true);
     await fetch(`${BASE_URL}/node/${nodeid}`)
       .then((res) => res.json())
       .then((data) => {
-        // console.log(data);
         if (data.requiresPassword) {
           setPasswordRequired(true);
         } else {
           setFiles(data);
-          console.log(data);
         }
       })
       .catch((err) => {
@@ -53,20 +48,20 @@ const NodeViewPage = () => {
   }
 
   async function singleFileDownload(fid: Number) {
-    window.location.href = `http://localhost:8000/file/download/${fid}`;
+    window.location.href = `${BASE_URL}/file/download/${fid}`;
   }
 
-  async function downloadFiles() {
-    if (selectedFiles.length === 0) {
-      return;
-    }
-    await fetch(`${BASE_URL}/node/download`, {
-      method: "POST",
-      body: JSON.stringify({
-        fileIds: selectedFiles,
-      }),
-    });
-  }
+  // async function downloadFiles() {
+  //   if (selectedFiles.length === 0) {
+  //     return;
+  //   }
+  //   await fetch(`${BASE_URL}/node/download`, {
+  //     method: "POST",
+  //     body: JSON.stringify({
+  //       fileIds: selectedFiles,
+  //     }),
+  //   });
+  // }
 
   useEffect(() => {
     fetchData();
@@ -77,57 +72,48 @@ const NodeViewPage = () => {
   }
 
   if (error) {
-    return <h1>Unable to Fetch</h1>;
+    return <h1> Unable to Fetch</h1>;
   }
 
   if (passwordRequired) {
     return (
-      <Box
-        sx={{
-          height: "100dvh",
-          width: "100vw",
-          p: 10,
-        }}
-        color="red"
-      >
-        <LoadingFiles />
-        <ValidatePasswordModal
-          nodeid={nodeid}
-          setPasswordRequired={setPasswordRequired}
-          setFiles={setFiles}
-        />
-      </Box>
+      <ValidatePasswordModal
+        nodeid={nodeid}
+        setPasswordRequired={setPasswordRequired}
+        setFiles={setFiles}
+      />
     );
   }
 
-  function toggleFileSelection(fid: String) {
-    var tempArr: String[] = [...selectedFiles];
-    if (tempArr.includes(fid)) {
-      tempArr.splice(tempArr.indexOf(fid), 1);
-      setselectedFiles(tempArr);
-    } else {
-      setselectedFiles([...tempArr, fid]);
-    }
-  }
+  // function toggleFileSelection(fid: String) {
+  //   var tempArr: String[] = [...selectedFiles];
+  //   if (tempArr.includes(fid)) {
+  //     tempArr.splice(tempArr.indexOf(fid), 1);
+  //     setselectedFiles(tempArr);
+  //   } else {
+  //     setselectedFiles([...tempArr, fid]);
+  //   }
+  // }
 
   return (
     <Box sx={{ height: 400, width: "100%", m: 2 }}>
-      <Button onClick={downloadFiles}>
+      {/* <Button onClick={downloadFiles}>
         <DownloadIcon />
-      </Button>
+      </Button> */}
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+        <Table sx={{ minWidth: 650 }} size="small" aria-label="table">
           {/* Table header */}
           <TableHeader />
 
           {/* File files */}
           <TableBody>
             {files?.length > 0 ? (
-              files?.map((file) => (
+              files?.map((file, index) => (
                 <FileRow
-                  toggleFileSelection={toggleFileSelection}
+                  id={index}
+                  // toggleFileSelection={toggleFileSelection}
                   file={file}
-                  selectedFiles={selectedFiles}
+                  // selectedFiles={selectedFiles}
                   singleFileDownload={singleFileDownload}
                 />
               ))
@@ -142,7 +128,6 @@ const NodeViewPage = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <FileDialog open={open} setOpen={setOpen} />
     </Box>
   );
 };

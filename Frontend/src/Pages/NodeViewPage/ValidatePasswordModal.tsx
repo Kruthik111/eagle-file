@@ -12,11 +12,12 @@ import { useState } from "react";
 import PasswordField from "../../Component/PasswordField";
 import { LoadingButton } from "@mui/lab";
 import { BASE_URL } from "../../constants";
-import { useSnackbar, VariantType } from "notistack";
+import { useSnackbar } from "notistack";
 
 // Icons
 
 import LockTwoToneIcon from "@mui/icons-material/LockTwoTone";
+import LoadingFiles from "../../Component/LoadingFiles";
 
 const style = {
   position: "absolute",
@@ -70,58 +71,68 @@ const ValidatePasswordModal = ({ setPasswordRequired, setFiles, nodeid }) => {
   }
 
   return (
-    <Modal open={true}>
-      <Paper>
-        <Box sx={style}>
-          <Stack spacing={3} justifyContent="center">
-            <div>
-              <Typography color="primary" fontWeight="600" fontSize={30}>
-                This Node is secured with password
-              </Typography>
-              <Typography>Provide password to access node</Typography>
-            </div>
-            <Divider>
-              <Chip
-                icon={<LockTwoToneIcon />}
-                label="Secured"
-                size="medium"
-                color="primary"
+    <Box
+      sx={{
+        height: "100dvh",
+        width: "100vw",
+        p: 10,
+      }}
+      color="red"
+    >
+      <LoadingFiles />
+      <Modal open={true}>
+        <Paper>
+          <Box sx={style}>
+            <Stack spacing={3} justifyContent="center">
+              <div>
+                <Typography color="primary" fontWeight="600" fontSize={30}>
+                  This Node is secured with password
+                </Typography>
+                <Typography>Provide password to access node</Typography>
+              </div>
+              <Divider>
+                <Chip
+                  icon={<LockTwoToneIcon />}
+                  label="Secured"
+                  size="medium"
+                  color="primary"
+                />
+              </Divider>
+              <PasswordField
+                passwordText={passwordText}
+                setPasswordText={setPasswordText}
               />
-            </Divider>
-            <PasswordField
-              passwordText={passwordText}
-              setPasswordText={setPasswordText}
-            />
-            <Stack gap={1} direction="row" justifyContent="space-between">
-              <Button
-                variant="contained"
-                color="secondary"
-                fullWidth
-                onClick={() => setPasswordText("")}
-              >
-                Clear
-              </Button>
-              <LoadingButton
-                disabled={passwordText.length < 3}
-                variant="contained"
-                fullWidth
-                onClick={validateNodePassword}
-                sx={{
-                  "&:disabled": {
-                    cursor: "no-drop",
-                    pointerEvents: "all !important",
-                  },
-                }}
-                loading={validatingPassword}
-                loadingPosition="end"
-              >
-                Validate Password
-              </LoadingButton>
+              <Stack gap={1} direction="row" justifyContent="space-between">
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  fullWidth
+                  onClick={() => setPasswordText("")}
+                >
+                  Clear
+                </Button>
+                <LoadingButton
+                  disabled={passwordText.length < 3}
+                  variant="contained"
+                  fullWidth
+                  onClick={validateNodePassword}
+                  sx={{
+                    "&:disabled": {
+                      cursor: "no-drop",
+                      pointerEvents: "all !important",
+                    },
+                  }}
+                  loading={validatingPassword}
+                  loadingPosition="end"
+                >
+                  Validate Password
+                </LoadingButton>
+              </Stack>
             </Stack>
-          </Stack>
-        </Box>
-      </Paper>
-    </Modal>
+          </Box>
+        </Paper>
+      </Modal>
+    </Box>
   );
 };
 
