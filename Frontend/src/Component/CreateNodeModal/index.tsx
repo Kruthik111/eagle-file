@@ -19,6 +19,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PasswordField from "../PasswordField";
 import { BASE_URL } from "../../constants";
+import CustomModal from "../CustomModal";
 
 const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -43,12 +44,19 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-const CreateNodeModal = ({ files, deleteFile, setFiles, handleFileUpload }) => {
+const CreateNodeModal = ({
+  files,
+  deleteFile,
+  setFiles,
+  setPreviewFiles,
+  handleFileUpload,
+  setNodeid,
+}) => {
   const [loading, setLoading] = useState(false);
   const [addPassword, setAddPassword] = useState(false);
   const [passwordText, setPasswordText] = useState("");
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   async function createNode(event: any) {
     event.preventDefault();
     if (files.length === 0) {
@@ -67,9 +75,6 @@ const CreateNodeModal = ({ files, deleteFile, setFiles, handleFileUpload }) => {
 
     await fetch(`${BASE_URL}/node/new`, {
       method: "POST",
-      // headers: {
-      //   "Content-Type": "application/json",
-      // },
       body: formData,
     })
       .then((res) => {
@@ -79,17 +84,29 @@ const CreateNodeModal = ({ files, deleteFile, setFiles, handleFileUpload }) => {
         }
         return res.json();
       })
-      .then((data) => navigate(`/share/${data.nodelink}`))
+      // .then((data) => navigate(`/share/${data.nodelink}`))
+      .then((data) => {
+        setPreviewFiles(data.files);
+        setNodeid(`${data.nodeid}`);
+      })
+      // .then((data) => console.log(data))
       .catch((err) => console.error("Upload Error:", err))
       .finally(() => {
         setLoading(false);
       });
   }
+
+  function togglePassword() {
+    setPasswordText("");
+    setAddPassword(!addPassword);
+  }
+
   return (
-    <Modal
+    <CustomModal
       open={true}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
+      handleClickOutside={() => {}}
+      // aria-labelledby="modal-modal-title"
+      // aria-describedby="modal-modal-description"
     >
       <Stack
         gap={1}
@@ -102,10 +119,6 @@ const CreateNodeModal = ({ files, deleteFile, setFiles, handleFileUpload }) => {
             xs: 2,
           },
           bgcolor: "white",
-          mt: {
-            md: 10,
-            xs: 20,
-          },
         }}
       >
         <Stack
@@ -160,7 +173,7 @@ const CreateNodeModal = ({ files, deleteFile, setFiles, handleFileUpload }) => {
             variant="contained"
             color="secondary"
             fullWidth
-            onClick={() => setAddPassword(!addPassword)}
+            onClick={togglePassword}
           >
             {addPassword ? "Remove password" : " Secure with password"}
           </Button>
@@ -176,13 +189,13 @@ const CreateNodeModal = ({ files, deleteFile, setFiles, handleFileUpload }) => {
               },
             }}
             loading={loading}
-            loadingPosition="end"
+            // loadingPosition="end"
           >
             Create Node
           </LoadingButton>
         </Stack>
       </Stack>
-    </Modal>
+    </CustomModal>
   );
 };
 

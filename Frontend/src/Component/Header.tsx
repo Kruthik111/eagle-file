@@ -16,6 +16,7 @@ import Button from "@mui/material/Button";
 import logo from "../assets/eagle-file-logo.png";
 import { Stack } from "@mui/material";
 import "../assets/css/font.css";
+import { Link } from "react-router-dom";
 interface Props {
   /**
    * Injected by the documentation to work in an iframe.
@@ -40,25 +41,33 @@ export default function Header(props: Props) {
       onClick={handleDrawerToggle}
       sx={{ textAlign: "center", fontFamily: "kavoon" }}
     >
-      <Stack sx={{ m: 2 }} direction="row">
-        <Box
-          component="img"
-          sx={{
-            width: 45,
-          }}
-          src={logo}
-        />
-        <Typography
-          variant="h5"
-          sx={{
-            display: "inline",
-            ml: 2,
-            fontFamily: "kavoon",
-          }}
-        >
-          Eagle Files
-        </Typography>
-      </Stack>
+      <Link
+        to="/"
+        style={{
+          textDecoration: "none",
+          color: "black",
+        }}
+      >
+        <Stack sx={{ m: 2 }} direction="row">
+          <Box
+            component="img"
+            sx={{
+              width: 45,
+            }}
+            src={logo}
+          />
+          <Typography
+            variant="h5"
+            sx={{
+              display: "inline",
+              ml: 2,
+              fontFamily: "kavoon",
+            }}
+          >
+            Eagle Files
+          </Typography>
+        </Stack>
+      </Link>
       <Divider />
       <List>
         {navItems.map((item) => (
@@ -89,20 +98,34 @@ export default function Header(props: Props) {
           >
             <MenuIcon />
           </IconButton>
-          <Box
-            component="img"
-            sx={{
-              width: 45,
+          <Link
+            to="/"
+            style={{
+              textDecoration: "none",
+              color: "white",
             }}
-            src={logo}
-          />
-          <Typography
-            variant="h5"
-            component="div"
-            sx={{ flexGrow: 1, pl: 3, fontFamily: "kavoon" }}
           >
-            Eagle Files
-          </Typography>
+            <Stack direction="row">
+              <Box
+                component="img"
+                sx={{
+                  width: 45,
+                }}
+                src={logo}
+              />
+              <Typography
+                variant="h5"
+                component="div"
+                sx={{
+                  flexGrow: 1,
+                  pl: 3,
+                  fontFamily: "kavoon",
+                }}
+              >
+                Eagle Files
+              </Typography>
+            </Stack>
+          </Link>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {navItems.map((item) => (
               <Button key={item} sx={{ color: "#fff" }}>

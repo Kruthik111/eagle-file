@@ -1,7 +1,6 @@
 import { Stack, TextField } from "@mui/material";
 
 const PasswordField = ({ passwordText, setPasswordText }) => {
-  // console.log(passwordText);
   return (
     <Stack>
       <TextField

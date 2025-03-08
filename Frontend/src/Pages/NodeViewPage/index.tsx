@@ -12,12 +12,12 @@ import {
 
 import { FcEmptyTrash } from "react-icons/fc";
 import LoadingFiles from "../../Component/LoadingFiles";
-import TableHeader from "./TableHeader";
+import TableHeader from "../../Component/TableHeader.tsx";
 import { useParams } from "react-router-dom";
-import FileRow from "./FileRow.tsx";
 import ValidatePasswordModal from "./ValidatePasswordModal.tsx";
 // import DownloadIcon from "@mui/icons-material/Download";
 import { BASE_URL } from "../../constants.ts";
+import FileRow from "../../Component/FileRow.tsx";
 
 const NodeViewPage = () => {
   let { nodeid } = useParams();
@@ -45,10 +45,6 @@ const NodeViewPage = () => {
       .finally(() => {
         setLoading(false);
       });
-  }
-
-  async function singleFileDownload(fid: Number) {
-    window.location.href = `${BASE_URL}/file/download/${fid}`;
   }
 
   // async function downloadFiles() {
@@ -114,7 +110,6 @@ const NodeViewPage = () => {
                   // toggleFileSelection={toggleFileSelection}
                   file={file}
                   // selectedFiles={selectedFiles}
-                  singleFileDownload={singleFileDownload}
                 />
               ))
             ) : (

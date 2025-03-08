@@ -27,7 +27,7 @@ const style = {
   width: 700,
   height: 500,
   bgcolor: "background.paper",
-  border: "2px solid #000",
+  borderRadius: 5,
   boxShadow: 24,
   p: 7,
 };
@@ -57,6 +57,9 @@ const ValidatePasswordModal = ({ setPasswordRequired, setFiles, nodeid }) => {
       })
       .then((data) => {
         if (data) {
+          enqueueSnackbar("Access granted", {
+            variant: "success",
+          });
           setFiles(data);
           setPasswordRequired(false);
         }
@@ -77,7 +80,6 @@ const ValidatePasswordModal = ({ setPasswordRequired, setFiles, nodeid }) => {
         width: "100vw",
         p: 10,
       }}
-      color="red"
     >
       <LoadingFiles />
       <Modal open={true}>
@@ -88,7 +90,9 @@ const ValidatePasswordModal = ({ setPasswordRequired, setFiles, nodeid }) => {
                 <Typography color="primary" fontWeight="600" fontSize={30}>
                   This Node is secured with password
                 </Typography>
-                <Typography>Provide password to access node</Typography>
+                <Typography fontWeight={500}>
+                  Provide password to access node
+                </Typography>
               </div>
               <Divider>
                 <Chip

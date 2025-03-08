@@ -1,19 +1,23 @@
-import { Checkbox, TableCell, TableRow } from "@mui/material";
-import { getReadableFileSizeString } from "../../utils/getReadableFileSizeFormat";
+import { Checkbox, TableCell, TableRow, Typography } from "@mui/material";
 import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
 import RadioButtonUncheckedTwoToneIcon from "@mui/icons-material/RadioButtonUncheckedTwoTone";
 
 import { BiSolidFilePdf } from "react-icons/bi";
 import { FaFileImage } from "react-icons/fa6";
-import DownloadButton from "../../Component/DownloadButton";
+import { BASE_URL } from "../constants";
+import { getReadableFileSizeString } from "../utils/getReadableFileSizeFormat";
+import DownloadButton from "./DownloadButton";
 
 const FileRow = ({
   file,
   // toggleFileSelection,
   // selectedFiles,
-  singleFileDownload,
   id,
 }) => {
+  async function singleFileDownload(fid: Number) {
+    window.location.href = `${BASE_URL}/file/download/${fid}`;
+  }
+
   const fileIcons = {
     pdf: <BiSolidFilePdf size={20} color="red" />,
     png: <FaFileImage size={20} color="blue" />,
@@ -38,7 +42,17 @@ const FileRow = ({
         }}
       >
         {fileIcons["png"]}
-        {file.originalname}
+        <Typography
+          variant="caption"
+          sx={{
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+            maxWidth: 1,
+            textOverflow: "ellipsis",
+          }}
+        >
+          {file.originalname}
+        </Typography>
       </TableCell>
       <TableCell>{getReadableFileSizeString(file.size)}</TableCell>
       <TableCell>{file.createdAt}</TableCell>

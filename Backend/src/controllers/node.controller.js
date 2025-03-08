@@ -60,10 +60,11 @@ const createNode = async (req, res, err) => {
 
     NewNode.save();
 
-    res.status(200).send({
-      message: "Files uploaded successfully",
-      nodelink: nodeid,
-      files: req.files,
+    const nodeItems = await File.find({ _id: { $in: fileIds } });
+
+    return res.status(200).json({
+      files: nodeItems,
+      nodeid: nodeid,
     });
   } catch (err) {
     res.status(500).send({ error: err.message });
@@ -83,7 +84,7 @@ const getNodeData = async (req, res) => {
   const nodeid = req.params.nodeid;
   const nodeData = await Node.findOne({ nodeid: nodeid });
   if (!nodeData) {
-    return res.status(404).json({ message: " Invalid password" });
+    return res.status(404).json({ message: "Requested files not present" });
   }
   var fileIds = [...nodeData?.items?.files];
 
