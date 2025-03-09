@@ -4,9 +4,9 @@ import RadioButtonUncheckedTwoToneIcon from "@mui/icons-material/RadioButtonUnch
 
 import { BiSolidFilePdf } from "react-icons/bi";
 import { FaFileImage } from "react-icons/fa6";
-import { BASE_URL } from "../constants";
-import { getReadableFileSizeString } from "../utils/getReadableFileSizeFormat";
-import DownloadButton from "./DownloadButton";
+import { API_BASE_URL } from "../../constants";
+import { getReadableFileSizeString } from "../../utils/getReadableFileSizeFormat";
+import DownloadButton from "../DownloadButton";
 
 const FileRow = ({
   file,
@@ -15,7 +15,7 @@ const FileRow = ({
   id,
 }) => {
   async function singleFileDownload(fid: Number) {
-    window.location.href = `${BASE_URL}/file/download/${fid}`;
+    window.location.href = `${API_BASE_URL}/file/download/${fid}`;
   }
 
   const fileIcons = {

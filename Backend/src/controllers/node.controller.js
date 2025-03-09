@@ -96,6 +96,24 @@ const getNodeData = async (req, res) => {
 };
 export { getNodeData };
 
+/* 
+
+*/
+
+const getNodeDataWithoutPassword = async (req, res) => {
+  const nodeid = req.params.nodeid;
+  const nodeData = await Node.findOne({ nodeid: nodeid });
+  if (!nodeData) {
+    return res.status(404).json({ message: "Requested files not present" });
+  }
+  var fileIds = [...nodeData?.items?.files];
+
+  const nodeItems = await File.find({ _id: { $in: fileIds } });
+  return res.json(nodeItems);
+};
+
+export { getNodeDataWithoutPassword };
+
 const validateNodePassword = async (req, res) => {
   try {
     const { nodeid, password } = req.body;

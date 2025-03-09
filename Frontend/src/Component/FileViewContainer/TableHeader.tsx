@@ -1,7 +1,6 @@
 import { Checkbox, TableCell, TableHead, TableRow } from "@mui/material";
 import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
 import RadioButtonUncheckedTwoToneIcon from "@mui/icons-material/RadioButtonUncheckedTwoTone";
-import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 
 const TableHeader = () => {
   return (

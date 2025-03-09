@@ -18,8 +18,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PasswordField from "../PasswordField";
-import { BASE_URL } from "../../constants";
+import { API_BASE_URL } from "../../constants";
 import CustomModal from "../CustomModal";
+import { setCookie } from "../../utils/cookieUtils";
 
 const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -73,7 +74,7 @@ const CreateNodeModal = ({
 
     setLoading(true);
 
-    await fetch(`${BASE_URL}/node/new`, {
+    await fetch(`${API_BASE_URL}/node/new`, {
       method: "POST",
       body: formData,
     })
@@ -84,10 +85,10 @@ const CreateNodeModal = ({
         }
         return res.json();
       })
-      // .then((data) => navigate(`/share/${data.nodelink}`))
       .then((data) => {
         setPreviewFiles(data.files);
         setNodeid(`${data.nodeid}`);
+        setCookie("nodeid", data.nodeid, 10);
       })
       // .then((data) => console.log(data))
       .catch((err) => console.error("Upload Error:", err))
@@ -178,7 +179,7 @@ const CreateNodeModal = ({
             {addPassword ? "Remove password" : " Secure with password"}
           </Button>
           <LoadingButton
-            disabled={files.length > 3}
+            disabled={files.length > 5}
             variant="contained"
             fullWidth
             onClick={createNode}

@@ -11,7 +11,7 @@ import {
 import { useState } from "react";
 import PasswordField from "../../Component/PasswordField";
 import { LoadingButton } from "@mui/lab";
-import { BASE_URL } from "../../constants";
+import { API_BASE_URL } from "../../constants";
 import { useSnackbar } from "notistack";
 
 // Icons
@@ -40,7 +40,7 @@ const ValidatePasswordModal = ({ setPasswordRequired, setFiles, nodeid }) => {
 
   async function validateNodePassword() {
     setValidatingPassword(true);
-    await fetch(`${BASE_URL}/node/${nodeid}/validate`, {
+    await fetch(`${API_BASE_URL}/node/${nodeid}/validate`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

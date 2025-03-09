@@ -1,23 +1,15 @@
-import Paper from "@mui/material/Paper";
 import { useEffect, useState } from "react";
 import {
   Box,
   // Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
 } from "@mui/material";
 
-import { FcEmptyTrash } from "react-icons/fc";
 import LoadingFiles from "../../Component/LoadingFiles";
-import TableHeader from "../../Component/TableHeader.tsx";
 import { useParams } from "react-router-dom";
 import ValidatePasswordModal from "./ValidatePasswordModal.tsx";
 // import DownloadIcon from "@mui/icons-material/Download";
-import { BASE_URL } from "../../constants.ts";
-import FileRow from "../../Component/FileRow.tsx";
+import { API_BASE_URL } from "../../constants.ts";
+import FileViewContainer from "../../Component/FileViewContainer/index.tsx";
 
 const NodeViewPage = () => {
   let { nodeid } = useParams();
@@ -29,7 +21,7 @@ const NodeViewPage = () => {
 
   async function fetchData(): Promise<void> {
     setLoading(true);
-    await fetch(`${BASE_URL}/node/${nodeid}`)
+    await fetch(`${API_BASE_URL}/node/${nodeid}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.requiresPassword) {
@@ -51,7 +43,7 @@ const NodeViewPage = () => {
   //   if (selectedFiles.length === 0) {
   //     return;
   //   }
-  //   await fetch(`${BASE_URL}/node/download`, {
+  //   await fetch(`${API_BASE_URL}/node/download`, {
   //     method: "POST",
   //     body: JSON.stringify({
   //       fileIds: selectedFiles,
@@ -96,33 +88,7 @@ const NodeViewPage = () => {
       {/* <Button onClick={downloadFiles}>
         <DownloadIcon />
       </Button> */}
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} size="small" aria-label="table">
-          {/* Table header */}
-          <TableHeader />
-
-          {/* File files */}
-          <TableBody>
-            {files?.length > 0 ? (
-              files?.map((file, index) => (
-                <FileRow
-                  id={index}
-                  // toggleFileSelection={toggleFileSelection}
-                  file={file}
-                  // selectedFiles={selectedFiles}
-                />
-              ))
-            ) : (
-              // If there is nothing inside the folder
-              <TableRow>
-                <TableCell colSpan={6} align="left">
-                  <FcEmptyTrash size={400} width={"100%"} />
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <FileViewContainer nodeid={nodeid} files={files} />
     </Box>
   );
 };

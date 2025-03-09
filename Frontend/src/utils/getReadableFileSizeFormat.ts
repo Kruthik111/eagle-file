@@ -1,4 +1,4 @@
-export function getReadableFileSizeString(fileSizeInBytes:Number):String {
+export function getReadableFileSizeString(fileSizeInBytes:number):String {
     var i = -1;
     var byteUnits = [' kB', ' MB', ' GB', ' TB', 'PB', 'EB', 'ZB', 'YB'];
     do {

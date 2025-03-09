@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Container, createTheme } from "@mui/material";
 import { ThemeProvider } from "@emotion/react";
 import FileContainer from "./Pages/NodeViewPage";
@@ -26,8 +25,6 @@ const theme = createTheme({
 });
 
 function App() {
-  const [allowDownload, setAllowDownload] = useState(false);
-
   return (
     <SnackbarProvider>
       <ThemeProvider theme={theme}>
@@ -46,10 +43,7 @@ function App() {
           })}
         >
           <Routes>
-            <Route
-              path="/node"
-              element={<FileContainer setAllowDownload={setAllowDownload} />}
-            />
+            <Route path="/node" element={<FileContainer />} />
             <Route path="/share/:nodeid" element={<NodeViewPage />} />
             <Route path="/" element={<GetStarted />} />
           </Routes>

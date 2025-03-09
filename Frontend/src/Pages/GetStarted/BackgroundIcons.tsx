@@ -85,7 +85,7 @@ const BackgroundIcons = () => {
         <List>
           <li>Share up to 5 files for free.</li>
           <li>Shorter links, eliminating the need for URL shorteners.</li>
-          <li>Files will be available for up to 1 hour.</li>
+          <li>Files will be available for up to 10 minutes.</li>
         </List>
       </Typography>
     </Box>

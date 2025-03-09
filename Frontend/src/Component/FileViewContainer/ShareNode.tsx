@@ -1,9 +1,8 @@
 import QRCode from "react-qr-code";
-import CustomModal from "./CustomModal";
+import CustomModal from "../CustomModal";
 import {
   Box,
   InputAdornment,
-  Link,
   Snackbar,
   Stack,
   styled,
@@ -16,6 +15,8 @@ import {
 import { useState } from "react";
 import { ContentCopyOutlined } from "@mui/icons-material";
 import ShareIcon from "@mui/icons-material/Share";
+import { SITE_BASE_URL } from "../../constants";
+import { getCookie } from "../../utils/cookieUtils";
 
 const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -36,7 +37,7 @@ const ShareNode = ({ nodeid, openShareModal, setOpenShareModal }) => {
   }
 
   function copyLink() {
-    navigator.clipboard.writeText(`http://localhost:5173/share/${nodeid}`);
+    navigator.clipboard.writeText(`${SITE_BASE_URL}/share/${nodeid}`);
     setShowSnackBar(true);
   }
 
@@ -52,7 +53,7 @@ const ShareNode = ({ nodeid, openShareModal, setOpenShareModal }) => {
           title: "Access Node through this link",
 
           // URL to share
-          url: `http://localhost:5173/share/${nodeid}`,
+          url: `${SITE_BASE_URL}/share/${nodeid}`,
         })
         .then(() => {
           console.log("Thanks for sharing!");
@@ -79,10 +80,9 @@ const ShareNode = ({ nodeid, openShareModal, setOpenShareModal }) => {
           flexDirection: "column",
           gap: 1,
         }}
-        onClick={(event) => {}}
       >
         <Typography variant="h3">Share Node</Typography>
-        <QRCode size={150} value={`http://localhost:5173/share/${nodeid}`} />
+        <QRCode size={150} value={`${SITE_BASE_URL}/share/${nodeid}`} />
         <Stack gap={2} direction="row">
           <Typography variant="h5">{nodeid}</Typography>
           <Tooltip title="share to web">
@@ -93,7 +93,7 @@ const ShareNode = ({ nodeid, openShareModal, setOpenShareModal }) => {
           id="input-with-icon-textfield"
           variant="outlined"
           size="medium"
-          value={`http://localhost:5173/share/${nodeid}`}
+          value={`${SITE_BASE_URL}/share/${nodeid}`}
           onClick={copyLink}
           sx={{
             borderRadius: "80px",

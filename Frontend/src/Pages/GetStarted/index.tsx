@@ -1,30 +1,20 @@
-import {
-  Box,
-  Button,
-  Paper,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
-} from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import FileInput from "../../Component/FileInput";
 import RecieveFile from "../../Component/RecieveFile";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import BackgroundIcons from "./BackgroundIcons";
 import CreateNodeModal from "../../Component/CreateNodeModal";
-import TableHeader from "../../Component/TableHeader";
-import FileRow from "../../Component/FileRow";
-import { FcEmptyTrash } from "react-icons/fc";
-import ShareNode from "../../Component/ShareNode";
+
+import { getCookie } from "../../utils/cookieUtils";
+import { API_BASE_URL } from "../../constants";
+import FileViewContainer from "../../Component/FileViewContainer";
 
 const GetStarted = () => {
   const [files, setFiles] = useState([]);
   const [previewFiles, setPreviewFiles] = useState([]);
   const [nodeid, setNodeid] = useState("");
-  const [openShareModal, setOpenShareModal] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   function deleteFile(id: number) {
     var tempFile = files;
@@ -32,12 +22,36 @@ const GetStarted = () => {
     setFiles([...tempFile]);
   }
 
-  const handleFileUpload = (event) => {
+  const handleFileUpload = (event: any) => {
     if (!event.target.files) return;
 
     const selectedFiles = event.target.files;
     setFiles([...files, ...selectedFiles]);
   };
+
+  async function checkNodeAlreadyPresent() {
+    const id = getCookie("nodeid");
+    if (id) {
+      setLoading(true);
+      await fetch(`${API_BASE_URL}/node/owner/${id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setPreviewFiles(data);
+          console.log(data);
+          setNodeid(id);
+        })
+        .catch((err) => console.log(err));
+    }
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    checkNodeAlreadyPresent();
+  }, []);
+
+  if (loading) {
+    return <h1>Loading....</h1>;
+  }
 
   return (
     <Box>
@@ -61,10 +75,7 @@ const GetStarted = () => {
               }}
               spacing={2}
             >
-              <FileInput
-                setFiles={setFiles}
-                handleFileUpload={handleFileUpload}
-              />
+              <FileInput handleFileUpload={handleFileUpload} />
               <RecieveFile />
             </Stack>
 
@@ -90,41 +101,7 @@ const GetStarted = () => {
           )}
         </>
       ) : (
-        <Box sx={{ height: 400, width: "100%", m: 2, px: 2 }}>
-          <Button onClick={() => setOpenShareModal(true)}>Share</Button>
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} size="small" aria-label="table">
-              {/* Table header */}
-              <TableHeader />
-
-              {/* File files */}
-              <TableBody>
-                {previewFiles?.length > 0 ? (
-                  previewFiles?.map((file, index) => (
-                    <FileRow
-                      id={index}
-                      // toggleFileSelection={toggleFileSelection}
-                      file={file}
-                      // selectedFiles={selectedFiles}
-                    />
-                  ))
-                ) : (
-                  // If there is nothing inside the folder
-                  <TableRow>
-                    <TableCell colSpan={6} align="left">
-                      <FcEmptyTrash size={400} width={"100%"} />
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <ShareNode
-            nodeid={nodeid}
-            openShareModal={openShareModal}
-            setOpenShareModal={setOpenShareModal}
-          />
-        </Box>
+        <FileViewContainer nodeid={nodeid} files={previewFiles} />
       )}
     </Box>
   );
