@@ -27,6 +27,9 @@ const TableHeader = () => {
         <TableCell sx={{ fontWeight: "600" }} align="left">
           Last Modified
         </TableCell>
+        <TableCell sx={{ fontWeight: "600" }} align="left">
+          Download
+        </TableCell>
       </TableRow>
     </TableHead>
   );

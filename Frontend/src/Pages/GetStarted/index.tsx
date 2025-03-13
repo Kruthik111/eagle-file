@@ -1,14 +1,16 @@
 import { Box, Stack } from "@mui/material";
 import FileInput from "../../Component/FileInput";
 import RecieveFile from "../../Component/RecieveFile";
-import { useEffect, useState } from "react";
+import { lazy, useEffect, useState } from "react";
 
 import BackgroundIcons from "./BackgroundIcons";
-import CreateNodeModal from "../../Component/CreateNodeModal";
+const CreateNodeModal = lazy(() => import("../../Component/CreateNodeModal"));
+const FileViewContainer = lazy(
+  () => import("../../Component/FileViewContainer")
+);
 
 import { getCookie } from "../../utils/cookieUtils";
 import { API_BASE_URL } from "../../constants";
-import FileViewContainer from "../../Component/FileViewContainer";
 
 const GetStarted = () => {
   const [files, setFiles] = useState([]);
