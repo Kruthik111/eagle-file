@@ -13,14 +13,14 @@ export const checkServerConnectivity = async (): Promise<boolean> => {
 
 export const handleServerError = (error: any): string => {
   if (error.message?.includes('Failed to fetch') || error.message?.includes('NetworkError')) {
-    return "Server is not running. Please start the backend server.";
+    return "Unable to connect to our servers. Please check your internet connection and try again.";
   }
   
   if (error.status === 0 || error.status >= 500) {
-    return "Server is not running. Please start the backend server.";
+    return "Our servers are temporarily unavailable. Please try again in a few moments.";
   }
   
-  return error.message || "An unexpected error occurred";
+  return error.message || "Something went wrong. Please try again.";
 };
 
 export const safeFetch = async (url: string, options?: RequestInit): Promise<Response> => {
@@ -29,7 +29,7 @@ export const safeFetch = async (url: string, options?: RequestInit): Promise<Res
     return response;
   } catch (error: any) {
     if (error.message?.includes('Failed to fetch') || error.message?.includes('NetworkError')) {
-      throw new Error("Server is not running. Please start the backend server.");
+      throw new Error("Unable to connect to our servers. Please check your internet connection and try again.");
     }
     throw error;
   }

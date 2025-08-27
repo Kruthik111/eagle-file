@@ -73,7 +73,7 @@ const CreateNodeModal = ({
   async function createNode(event: any) {
     event.preventDefault();
     if (files.length === 0) {
-      alert("Please select files to upload.");
+      alert("Please select at least one file to upload.");
       return;
     }
 
@@ -98,7 +98,13 @@ const CreateNodeModal = ({
       console.log("Upload response status:", response.status);
       
       if (!response.ok) {
-        throw new Error(`Upload failed: ${response.status} ${response.statusText}`);
+        if (response.status === 413) {
+          throw new Error("File size too large. Please try with smaller files.");
+        } else if (response.status === 429) {
+          throw new Error("Too many requests. Please wait a moment and try again.");
+        } else {
+          throw new Error("Upload failed. Please try again.");
+        }
       }
 
       const data = await response.json();
@@ -218,7 +224,7 @@ const CreateNodeModal = ({
             loading={loading}
             // loadingPosition="end"
           >
-            Create Node
+            {files.length > 5 ? "Too many files (max 5)" : "Create Share Link"}
           </LoadingButton>
         </Stack>
       </Stack>

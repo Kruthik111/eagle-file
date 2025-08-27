@@ -31,7 +31,7 @@ const ServerStatus = () => {
     return (
       <Box sx={{ position: 'fixed', top: 16, right: 16, zIndex: 9999 }}>
         <Alert severity="warning" sx={{ maxWidth: 300 }}>
-          Backend server is offline. Please start the server to upload files.
+          Connection issue detected. Some features may be temporarily unavailable.
         </Alert>
       </Box>
     );

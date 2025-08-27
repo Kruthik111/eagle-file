@@ -70,7 +70,11 @@ const GetStarted = () => {
         const response = await safeFetch(`${API_BASE_URL}/node/owner/${id}`);
         
         if (!response.ok) {
-          throw new Error(`Failed to fetch node data: ${response.status}`);
+          if (response.status === 404) {
+            throw new Error("File not found or may have expired.");
+          } else {
+            throw new Error("Unable to load files. Please try again.");
+          }
         }
         
         const data = await response.json();
@@ -99,7 +103,7 @@ const GetStarted = () => {
   if (error) {
     return (
       <Box sx={{ p: 3, textAlign: 'center' }}>
-        <h2>Connection Error</h2>
+        <h2>Connection Issue</h2>
         <p>{error}</p>
         <button 
           onClick={() => {
@@ -116,7 +120,7 @@ const GetStarted = () => {
             marginTop: '16px'
           }}
         >
-          Retry
+          Try Again
         </button>
       </Box>
     );
