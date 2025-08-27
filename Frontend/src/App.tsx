@@ -6,6 +6,7 @@ import Header from "./Component/Header";
 import GetStarted from "./Pages/GetStarted";
 const NodeViewPage = lazy(() => import("./Pages/NodeViewPage"));
 import { SnackbarProvider } from "notistack";
+import ServerStatus from "./Component/ServerStatus";
 
 const theme = createTheme({
   palette: {
@@ -28,6 +29,7 @@ function App() {
   return (
     <SnackbarProvider>
       <ThemeProvider theme={theme}>
+        <ServerStatus />
         <Header />
         <Container
           sx={(theme) => ({

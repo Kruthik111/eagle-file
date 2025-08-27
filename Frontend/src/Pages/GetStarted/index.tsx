@@ -1,7 +1,7 @@
 import { Box, Stack } from "@mui/material";
 import FileInput from "../../Component/FileInput";
 import RecieveFile from "../../Component/RecieveFile";
-import { lazy, useEffect, useState } from "react";
+import { lazy, useEffect, useState, startTransition, Suspense } from "react";
 
 import BackgroundIcons from "./BackgroundIcons";
 const CreateNodeModal = lazy(() => import("../../Component/CreateNodeModal"));
@@ -11,12 +11,38 @@ const FileViewContainer = lazy(
 
 import { getCookie } from "../../utils/cookieUtils";
 import { API_BASE_URL } from "../../constants";
+import { safeFetch, handleServerError } from "../../utils/serverUtils";
 
 const GetStarted = () => {
-  const [files, setFiles] = useState([]);
-  const [previewFiles, setPreviewFiles] = useState([]);
+  const [files, setFiles] = useState<File[]>([]);
+  const [previewFiles, setPreviewFiles] = useState<any[]>([]);
   const [nodeid, setNodeid] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  // Preload lazy components
+  useEffect(() => {
+    // Preload CreateNodeModal
+    const preloadCreateNodeModal = async () => {
+      try {
+        await import("../../Component/CreateNodeModal");
+      } catch (error) {
+        console.error("Failed to preload CreateNodeModal:", error);
+      }
+    };
+    
+    // Preload FileViewContainer
+    const preloadFileViewContainer = async () => {
+      try {
+        await import("../../Component/FileViewContainer");
+      } catch (error) {
+        console.error("Failed to preload FileViewContainer:", error);
+      }
+    };
+
+    preloadCreateNodeModal();
+    preloadFileViewContainer();
+  }, []);
 
   function deleteFile(id: number) {
     var tempFile = files;
@@ -28,23 +54,42 @@ const GetStarted = () => {
     if (!event.target.files) return;
 
     const selectedFiles = event.target.files;
-    setFiles([...files, ...selectedFiles]);
+    // Use startTransition to prevent suspension
+    startTransition(() => {
+      setFiles(prevFiles => [...prevFiles, ...selectedFiles]);
+    });
   };
 
   async function checkNodeAlreadyPresent() {
     const id = getCookie("nodeid");
     if (id) {
       setLoading(true);
-      await fetch(`${API_BASE_URL}/node/owner/${id}`)
-        .then((res) => res.json())
-        .then((data) => {
+      setError("");
+      
+      try {
+        const response = await safeFetch(`${API_BASE_URL}/node/owner/${id}`);
+        
+        if (!response.ok) {
+          if (response.status === 404) {
+            throw new Error("File not found or may have expired.");
+          } else {
+            throw new Error("Unable to load files. Please try again.");
+          }
+        }
+        
+        const data = await response.json();
+        
+        startTransition(() => {
           setPreviewFiles(data);
-          console.log(data);
           setNodeid(id);
-        })
-        .catch((err) => console.log(err));
+        });
+      } catch (err: any) {
+        console.error("Error checking node:", err);
+        setError(handleServerError(err));
+      } finally {
+        setLoading(false);
+      }
     }
-    setLoading(false);
   }
 
   useEffect(() => {
@@ -53,6 +98,32 @@ const GetStarted = () => {
 
   if (loading) {
     return <h1>Loading....</h1>;
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ p: 3, textAlign: 'center' }}>
+        <h2>Connection Issue</h2>
+        <p>{error}</p>
+        <button 
+          onClick={() => {
+            setError("");
+            checkNodeAlreadyPresent();
+          }}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#fca311',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            marginTop: '16px'
+          }}
+        >
+          Try Again
+        </button>
+      </Box>
+    );
   }
 
   return (
@@ -92,18 +163,22 @@ const GetStarted = () => {
             </Box>
           </Stack>
           {files.length > 0 && (
-            <CreateNodeModal
-              files={files}
-              deleteFile={deleteFile}
-              setPreviewFiles={setPreviewFiles}
-              setFiles={setFiles}
-              handleFileUpload={handleFileUpload}
-              setNodeid={setNodeid}
-            />
+            <Suspense fallback={<div>Loading modal...</div>}>
+              <CreateNodeModal
+                files={files}
+                deleteFile={deleteFile}
+                setPreviewFiles={setPreviewFiles}
+                setFiles={setFiles}
+                handleFileUpload={handleFileUpload}
+                setNodeid={setNodeid}
+              />
+            </Suspense>
           )}
         </>
       ) : (
-        <FileViewContainer nodeid={nodeid} files={previewFiles} />
+        <Suspense fallback={<div>Loading files...</div>}>
+          <FileViewContainer nodeid={nodeid} files={previewFiles} />
+        </Suspense>
       )}
     </Box>
   );

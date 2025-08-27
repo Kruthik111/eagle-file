@@ -9,18 +9,20 @@ import {
   tooltipClasses,
   TooltipProps,
   Typography,
+  Alert,
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import FileRow from "./FileRow";
 
 import NoteAddOutlinedIcon from "@mui/icons-material/NoteAddOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useState } from "react";
+import { useState, startTransition } from "react";
 import { useNavigate } from "react-router-dom";
 import PasswordField from "../PasswordField";
 import { API_BASE_URL } from "../../constants";
 import CustomModal from "../CustomModal";
 import { setCookie } from "../../utils/cookieUtils";
+import { safeFetch, handleServerError } from "../../utils/serverUtils";
 
 const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -45,6 +47,15 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
+interface CreateNodeModalProps {
+  files: File[];
+  deleteFile: (id: number) => void;
+  setFiles: (files: File[]) => void;
+  setPreviewFiles: (files: any[]) => void;
+  handleFileUpload: (event: any) => void;
+  setNodeid: (id: string) => void;
+}
+
 const CreateNodeModal = ({
   files,
   deleteFile,
@@ -52,49 +63,64 @@ const CreateNodeModal = ({
   setPreviewFiles,
   handleFileUpload,
   setNodeid,
-}) => {
+}: CreateNodeModalProps) => {
   const [loading, setLoading] = useState(false);
   const [addPassword, setAddPassword] = useState(false);
   const [passwordText, setPasswordText] = useState("");
+  const [error, setError] = useState("");
 
   // const navigate = useNavigate();
   async function createNode(event: any) {
     event.preventDefault();
     if (files.length === 0) {
-      alert("Please select files to upload.");
+      alert("Please select at least one file to upload.");
       return;
     }
 
     const formData = new FormData();
-    files.forEach((file) => {
+    files.forEach((file: File) => {
       formData.append("files", file);
     });
 
     formData.append("password", passwordText);
 
     setLoading(true);
+    setError("");
 
-    await fetch(`${API_BASE_URL}/node/new`, {
-      method: "POST",
-      body: formData,
-    })
-      .then((res) => {
-        if (!res.ok) {
-          new Error("sorry");
-          return;
+    try {
+      console.log("Attempting to upload files to:", `${API_BASE_URL}/node/new`);
+      
+      const response = await safeFetch(`${API_BASE_URL}/node/new`, {
+        method: "POST",
+        body: formData,
+      });
+
+      console.log("Upload response status:", response.status);
+      
+      if (!response.ok) {
+        if (response.status === 413) {
+          throw new Error("File size too large. Please try with smaller files.");
+        } else if (response.status === 429) {
+          throw new Error("Too many requests. Please wait a moment and try again.");
+        } else {
+          throw new Error("Upload failed. Please try again.");
         }
-        return res.json();
-      })
-      .then((data) => {
+      }
+
+      const data = await response.json();
+      console.log("Upload successful, data:", data);
+      
+      startTransition(() => {
         setPreviewFiles(data.files);
         setNodeid(`${data.nodeid}`);
         setCookie("nodeid", data.nodeid, 10);
-      })
-      // .then((data) => console.log(data))
-      .catch((err) => console.error("Upload Error:", err))
-      .finally(() => {
-        setLoading(false);
       });
+    } catch (err: any) {
+      console.error("Upload Error:", err);
+      setError(handleServerError(err));
+    } finally {
+      setLoading(false);
+    }
   }
 
   function togglePassword() {
@@ -163,6 +189,12 @@ const CreateNodeModal = ({
             />
           ))}
         </Stack>
+        
+        {error && (
+          <Alert severity="error" sx={{ mt: 2 }}>
+            {error}
+          </Alert>
+        )}
         {addPassword && (
           <PasswordField
             passwordText={passwordText}
@@ -192,7 +224,7 @@ const CreateNodeModal = ({
             loading={loading}
             // loadingPosition="end"
           >
-            Create Node
+            {files.length > 5 ? "Too many files (max 5)" : "Create Share Link"}
           </LoadingButton>
         </Stack>
       </Stack>
