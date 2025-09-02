@@ -2,7 +2,6 @@ import {
   Avatar,
   Button,
   IconButton,
-  Modal,
   Stack,
   styled,
   Tooltip,
@@ -17,7 +16,6 @@ import FileRow from "./FileRow";
 import NoteAddOutlinedIcon from "@mui/icons-material/NoteAddOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useState, startTransition } from "react";
-import { useNavigate } from "react-router-dom";
 import PasswordField from "../PasswordField";
 import { API_BASE_URL } from "../../constants";
 import CustomModal from "../CustomModal";
