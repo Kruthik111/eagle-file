@@ -29,7 +29,7 @@ function App() {
   return (
     <SnackbarProvider>
       <ThemeProvider theme={theme}>
-        <ServerStatus />
+        {/* <ServerStatus /> */}
         <Header />
         <Container
           sx={(theme) => ({
